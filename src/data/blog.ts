@@ -1,5 +1,6 @@
 import { architectureBlogPosts } from "./architectureBlogPosts";
 import { terminalEatingBugBlogPost } from "./terminalEatingBugBlogPost";
+import { rendererMemoryLeaksBlogPost } from "./rendererMemoryLeaksBlogPost";
 
 export type BlogAuthor = {
   name: string;
@@ -75,6 +76,7 @@ export type BlogPost = {
 };
 
 export const blogPosts: BlogPost[] = [
+  rendererMemoryLeaksBlogPost,
   terminalEatingBugBlogPost,
   ...architectureBlogPosts,
   {
