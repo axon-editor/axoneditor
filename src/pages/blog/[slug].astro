@@ -1,8 +1,8 @@
 ---
 import MermaidDiagram from "@components/blog/MermaidDiagram.astro";
 import { blogPosts, getBlogPost, type BlogSection } from "@data/blog";
+import { highlightCode } from "@lib/highlight";
 import HomeLayout from "@layouts/HomeLayout.astro";
-import { codeToHtml } from "shiki";
 
 export function getStaticPaths() {
   return blogPosts.map((post) => ({
@@ -49,18 +49,10 @@ const nextPost = seriesIndex >= 0 ? seriesPosts[seriesIndex + 1] ?? null : null;
 const titleWords = post.title.split(" ");
 
 const highlightedCode = new Map<BlogSection, string>();
-await Promise.all(
-  post.sections.map(async (section) => {
-    if (section.kind !== "code") return;
-    highlightedCode.set(
-      section,
-      await codeToHtml(section.code, {
-        lang: section.language === "txt" ? "text" : section.language,
-        theme: "github-dark-default",
-      }),
-    );
-  }),
-);
+for (const section of post.sections) {
+  if (section.kind !== "code") continue;
+  highlightedCode.set(section, highlightCode(section.code, section.language));
+}
 
 function splitHoverPhrases(section: Extract<BlogSection, { kind: "paragraph" }>) {
   const phrases = section.hoverPhrases ?? [];

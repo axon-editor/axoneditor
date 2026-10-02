@@ -259,6 +259,21 @@ body {
   user-select: none;
 }
 
+.tok-comment { color: #5b6472; font-style: italic; }
+.tok-string { color: #9dcc82; }
+.tok-escape { color: #d8b4e2; }
+.tok-number { color: #e3b66f; }
+.tok-keyword { color: #d8b4e2; }
+.tok-control { color: #e3b66f; }
+.tok-modifier { color: #b98fd8; }
+.tok-builtin { color: #73b7d6; }
+.tok-type { color: #73b7d6; }
+.tok-function { color: #e9d5a6; }
+.tok-property { color: #cfc7b4; }
+.tok-operator { color: #8b95a5; }
+.tok-punctuation { color: #6b7280; }
+.tok-tag { color: #e0757a; }
+
 [data-mermaid-figure] svg {
   max-width: 100%;
   height: auto;
