@@ -74,9 +74,30 @@ function splitHoverPhrases(section: Extract<BlogSection, { kind: "paragraph" }>)
 }
 
 const calloutClasses = {
-  info: "border-[#59c2ff]/55 bg-[#59c2ff]/[0.045]",
-  warning: "border-[#ffb454]/60 bg-[#ffb454]/[0.045]",
-  success: "border-[#aad94c]/55 bg-[#aad94c]/[0.04]",
+  info: {
+    shell: "border-[#59c2ff]/20 bg-[#59c2ff]/[0.035]",
+    icon: "border-[#59c2ff]/35 bg-[#59c2ff]/10 text-[#8ed6ff]",
+    title: "text-zinc-100",
+    kicker: "text-[#8ed6ff]",
+  },
+  warning: {
+    shell: "border-[#ffb454]/20 bg-[#ffb454]/[0.035]",
+    icon: "border-[#ffb454]/35 bg-[#ffb454]/10 text-[#ffc880]",
+    title: "text-zinc-100",
+    kicker: "text-[#ffc880]",
+  },
+  success: {
+    shell: "border-[#aad94c]/20 bg-[#aad94c]/[0.03]",
+    icon: "border-[#aad94c]/35 bg-[#aad94c]/10 text-[#c4e88f]",
+    title: "text-zinc-100",
+    kicker: "text-[#c4e88f]",
+  },
+};
+
+const calloutLabels = {
+  info: "Note",
+  warning: "Watch out",
+  success: "Result",
 };
 ---
 
@@ -156,8 +177,8 @@ const calloutClasses = {
       </figcaption>
     </figure>
 
-    <div class="mx-auto grid max-w-7xl gap-8 px-5 pb-24 pt-14 lg:grid-cols-[5rem_minmax(0,48rem)_minmax(12rem,1fr)] lg:items-start lg:justify-center xl:gap-12">
-      <aside class="hidden lg:block">
+    <div class="mx-auto grid max-w-7xl gap-8 px-5 pb-24 pt-14 lg:grid-cols-[5rem_minmax(0,48rem)_minmax(12rem,1fr)] lg:items-stretch lg:justify-center xl:gap-12">
+      <aside class="hidden self-start lg:block">
         <div class="sticky top-24 text-center">
           <span class="block text-[10px] font-semibold uppercase text-axon-muted">Part</span>
           <strong class="mt-2 block font-mono text-xl font-normal text-zinc-300">{String(post.seriesOrder ?? 1).padStart(2, "0")}</strong>
@@ -166,12 +187,12 @@ const calloutClasses = {
         </div>
       </aside>
 
-      <main class="min-w-0" data-article-content>
+      <main class="min-w-0 self-stretch" data-article-content>
         <div class="grid gap-8 md:gap-10">
           {post.sections.map((section) => {
             if (section.kind === "paragraph") {
               return (
-                <p class="text-[1.04rem] leading-8 text-zinc-400 md:text-[1.08rem] md:leading-9" data-article-reveal>
+                <p class="text-[0.98rem] leading-[1.75] text-zinc-400 md:text-[1rem] md:leading-[1.8]" data-article-reveal>
                   {splitHoverPhrases(section).map((segment) =>
                     segment.note ? (
                       <span class="group/phrase relative inline cursor-help text-zinc-200 decoration-white/35 underline decoration-dotted underline-offset-4" tabindex="0">
@@ -189,20 +210,68 @@ const calloutClasses = {
             if (section.kind === "heading") {
               return (
                 <section class="scroll-mt-28 border-t border-white/10 pt-10" id={headingId(section.title)} data-article-reveal>
-                  {section.kicker ? <p class="text-xs font-semibold uppercase text-[var(--axon-accent)]">{section.kicker}</p> : null}
-                  <h2 class="mt-3 text-3xl font-semibold leading-tight text-zinc-100 md:text-4xl">{section.title}</h2>
+                  {section.kicker ? <p class="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[var(--axon-accent)]">{section.kicker}</p> : null}
+                  <h2 class="mt-2.5 text-2xl font-semibold leading-tight text-zinc-100 md:text-[1.75rem]">{section.title}</h2>
                 </section>
               );
             }
 
             if (section.kind === "code") {
               return (
-                <figure class="group/code overflow-hidden rounded-lg border border-white/10 bg-[#08090a]" data-code-block data-article-reveal>
-                  <figcaption class="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 text-xs text-axon-muted">
-                    <span>{section.filename ?? section.language}</span>
-                    <button type="button" class="cursor-pointer rounded px-2 py-1 transition hover:bg-white/[0.06] hover:text-zinc-100" data-copy-code>Copy</button>
+                <figure
+                  class="group/code relative overflow-hidden rounded-2xl border border-white/[0.07] bg-[#08090a] shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset,0_18px_40px_-24px_rgba(0,0,0,0.9)] transition-colors duration-300 hover:border-white/[0.12]"
+                  data-code-block
+                  data-article-reveal
+                >
+                  <figcaption class="flex items-center justify-between gap-4 border-b border-white/[0.07] bg-white/[0.012] px-3.5 py-2.5">
+                    <span class="flex min-w-0 items-center gap-2.5">
+                      <span class="flex shrink-0 gap-1" aria-hidden="true">
+                        <span class="h-2 w-2 rounded-full bg-[#ff5f57]/80"></span>
+                        <span class="h-2 w-2 rounded-full bg-[#febc2e]/80"></span>
+                        <span class="h-2 w-2 rounded-full bg-[#28c840]/80"></span>
+                      </span>
+                      <span class="h-3 w-px shrink-0 bg-white/10"></span>
+                      <span class="flex min-w-0 items-baseline gap-1.5 font-mono text-[0.72rem] leading-none">
+                        <span class="shrink-0 text-zinc-400">
+                          {section.filename?.split("/").pop() ?? section.language}
+                        </span>
+                        {section.filename ? (
+                          <span class="truncate text-[0.68rem] text-zinc-600">
+                            {section.filename.split("/").slice(0, -1).join("/")}
+                          </span>
+                        ) : null}
+                      </span>
+                    </span>
+                    <button
+                      type="button"
+                      class="group/copy flex shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.03] px-2 py-1 text-[0.7rem] text-zinc-400 transition duration-200 hover:border-white/20 hover:bg-white/[0.07] hover:text-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--axon-accent)] data-[copied]:border-[#aad94c]/40 data-[copied]:bg-[#aad94c]/10 data-[copied]:text-[#c4e88f]"
+                      data-copy-code
+                    >
+                      <span class="relative grid h-3 w-3 place-items-center" aria-hidden="true">
+                        <svg
+                          class="absolute h-3 w-3 fill-none stroke-current stroke-[1.6] transition duration-200 group-data-[copied]/copy:scale-75 group-data-[copied]/copy:opacity-0"
+                          viewBox="0 0 20 20"
+                          data-copy-icon
+                        >
+                          <path d="M9 9V5.5A1.5 1.5 0 0 1 10.5 4h4A1.5 1.5 0 0 1 16 5.5V9"></path>
+                          <rect x="4" y="9" width="7" height="7" rx="1.5"></rect>
+                        </svg>
+                        <svg
+                          class="absolute h-3 w-3 scale-75 fill-none stroke-current stroke-[1.9] opacity-0 transition duration-200 group-data-[copied]/copy:scale-100 group-data-[copied]/copy:opacity-100"
+                          viewBox="0 0 20 20"
+                          data-copy-done
+                        >
+                          <path d="M4.5 12.5 8 16l7.5-7.5"></path>
+                        </svg>
+                      </span>
+                      <span data-copy-label>Copy</span>
+                    </button>
                   </figcaption>
-                  <div class="article-highlight overflow-x-auto" set:html={highlightedCode.get(section) ?? ""}></div>
+                  <div
+                    class="article-highlight overflow-x-auto"
+                    set:html={highlightedCode.get(section) ?? ""}
+                  >
+                  </div>
                 </figure>
               );
             }
@@ -212,10 +281,31 @@ const calloutClasses = {
             }
 
             if (section.kind === "callout") {
+              const tone = calloutClasses[section.tone];
               return (
-                <aside class:list={["border-l-2 px-5 py-1", calloutClasses[section.tone]]} data-article-reveal>
-                  <h3 class="text-base font-semibold text-zinc-100">{section.title}</h3>
-                  <p class="mt-2 text-sm leading-7 text-zinc-400">{section.body}</p>
+                <aside
+                  class:list={["rounded-xl border px-4 py-4 md:px-5 md:py-5", tone.shell]}
+                  data-tone={section.tone}
+                  data-article-reveal
+                >
+                  <div class="flex gap-3">
+                    <span
+                      aria-hidden="true"
+                      class:list={[
+                        "mt-px grid h-5 w-5 shrink-0 place-items-center rounded-full border font-mono text-[0.62rem] font-semibold leading-none",
+                        tone.icon,
+                      ]}
+                    >
+                      {section.tone === "info" ? "i" : section.tone === "warning" ? "!" : "\u2713"}
+                    </span>
+                    <div class="min-w-0">
+                      <p class:list={["text-[0.68rem] font-semibold uppercase tracking-[0.14em]", tone.kicker]}>
+                        {calloutLabels[section.tone]}
+                      </p>
+                      <h3 class:list={["mt-1.5 text-[0.95rem] font-medium leading-snug", tone.title]}>{section.title}</h3>
+                      <p class="mt-1.5 text-[0.9rem] leading-7 text-zinc-400">{section.body}</p>
+                    </div>
+                  </div>
                 </aside>
               );
             }
@@ -279,7 +369,7 @@ const calloutClasses = {
         </div>
       </main>
 
-      <aside class="hidden lg:block">
+      <aside class="hidden self-stretch lg:block">
         <div class="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2">
           <p class="text-xs font-semibold uppercase text-zinc-300">In this article</p>
           <nav aria-label="On this page" class="mt-4 grid gap-0 border-l border-white/10" data-article-toc>
@@ -327,11 +417,43 @@ const calloutClasses = {
       showToast("Article link copied");
     });
 
+// Copy the code element text directly rather than the block's textContent:
+    // the rendered markup adds nothing a reader wants, and the gutter numbers come
+    // from a ::before pseudo-element that textContent never included anyway.
+    const readCode = (block: HTMLElement) => {
+      const code = block.querySelector("code");
+      if (!code) return "";
+      const lines = Array.from(code.querySelectorAll(".line"));
+      if (lines.length === 0) return code.textContent ?? "";
+      return lines
+        .map((line) => (line.textContent ?? "").replace(/^\s+/, ""))
+        .join("\n")
+        .replace(/\s+$/, "");
+    };
+
     document.querySelectorAll<HTMLElement>("[data-code-block]").forEach((block) => {
-      block.querySelector("[data-copy-code]")?.addEventListener("click", async () => {
-        const code = block.querySelector("code")?.textContent ?? "";
-        await navigator.clipboard.writeText(code);
-        showToast("Code copied");
+      const button = block.querySelector<HTMLButtonElement>("[data-copy-code]");
+      if (!button) return;
+      const label = button.querySelector("[data-copy-label]");
+
+      button.addEventListener("click", async () => {
+        // A rejected clipboard promise happens on insecure origins and when the
+        // document is not focused, and an unhandled rejection would look like
+        // the button is simply broken.
+        try {
+          await navigator.clipboard.writeText(readCode(block));
+          if (label) label.textContent = "Copied";
+          button.dataset.copied = "true";
+          showToast("Code copied");
+        } catch {
+          if (label) label.textContent = "Failed";
+          showToast("Copy failed");
+        }
+
+        window.setTimeout(() => {
+          if (label) label.textContent = "Copy";
+          delete button.dataset.copied;
+        }, 1600);
       });
     });
 
